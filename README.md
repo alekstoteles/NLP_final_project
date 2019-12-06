@@ -1,6 +1,7 @@
 # Sparse Multi-label Patent Classification with Deep Learning
 
 Alexander Mueller & Kevin Stone
+
 W266 NLP with Deep Learning - Final Project (Fall 2019)
 
 ## Project description
@@ -13,7 +14,12 @@ The project developed a multi-label classification model capable of categorizing
 
 - [Final Presentation (ppt)](W266_final_presentation_multilabel_patent_class_mueller_stone.pptx)
 
-- [Code and data (subdirectory]](/data)
+- [Code](code)
+
+
+## External links
+
+- [Link to USPTO 2M dataset](http://mleg.cse.sc.edu/DeepPatent/index.html)
 
 
 ## Acknowledgements
