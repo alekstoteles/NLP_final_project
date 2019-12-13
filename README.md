@@ -12,7 +12,7 @@ The project developed a multi-label classification model capable of categorizing
 
 - [Final Paper (pdf)](W266_final_paper_multilabel_patent_class_mueller_stone.pdf)
 
-- [Final Presentation (ppt)](W266_final_presentation_multilabel_patent_class_mueller_stone.pptx)
+- [Final Presentation (ppt)](W266_final_presentation_multilabel_patent_class_mueller_stone.pdf)
 
 - [Code](code)
 
