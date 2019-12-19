@@ -133,7 +133,7 @@ def load_crc_model():
         print("\nModel dowloaded.")
 
     # load model
-    model = load_model(path + 'model.h5', custom_objects={'weighted_bce': weighted_bce, 'f1': f1})
+    model = load_model(path + 'model2.h5', custom_objects={'weighted_bce': weighted_bce, 'f1': f1})
     print("Model loaded.")
 
 def generate_inference(model, abstract):
