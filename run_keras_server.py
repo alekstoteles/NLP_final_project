@@ -193,6 +193,16 @@ class ReusableForm(Form):
     submit = SubmitField("Enter")
 
 # Home page
+
+@app.before_first_request
+def _declareStuff():
+    print(("* Loading Keras model and Flask starting server..."
+           "please wait until server has fully started"))
+    load_crc_list()
+    load_tokenizer()
+    load_crc_model()
+    # app.run(debug=False, threaded=False)
+
 @app.route("/", methods=['GET', 'POST'])
 def home():
     """Home page of app with form"""
@@ -229,9 +239,9 @@ def predict():
 
 # if this is the main thread of execution first load the model and then start the server
 if __name__ == "__main__":
-    print(("* Loading Keras model and Flask starting server..."
-           "please wait until server has fully started"))
-    load_crc_list()
-    load_tokenizer()
-    load_crc_model()
+    # print(("* Loading Keras model and Flask starting server..."
+    #        "please wait until server has fully started"))
+    # load_crc_list()
+    # load_tokenizer()
+    # load_crc_model()
     app.run(debug=False, threaded=False)
