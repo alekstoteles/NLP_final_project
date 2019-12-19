@@ -16,6 +16,9 @@ import io
 from flask import Flask, render_template, request
 from wtforms import Form, TextField, TextAreaField, validators, SubmitField, DecimalField, IntegerField
 import pickle
+import wget
+from pathlib import Path
+
 import numpy as np
 from numpy import array
 from numpy import asarray
@@ -94,7 +97,8 @@ def load_crc_list():
 
 def load_crc_model():
     global model
-    path = 'data/'
+    path = './data/'
+    remote_path = 'https://kstonedev.s3-us-west-2.amazonaws.com/W266/'
 
     # Define custom functions used in model training
     def recall_m(y_true, y_pred):
@@ -117,6 +121,14 @@ def load_crc_model():
         bce = K.binary_crossentropy(y_true, y_pred)
         weighted_bce = K.mean(bce * weights)
         return weighted_bce
+
+
+    # if first time, download model
+    try:
+        filepath = Path(path + 'model.h5').resolve(strict=True)
+    except FileNotFoundError:
+        filename = wget.download(remote_path + 'model.h5', out=path)
+        print("\nModel dowloaded.")
 
     # load model
     model = load_model(path + 'model.h5', custom_objects={'weighted_bce': weighted_bce, 'f1': f1})
