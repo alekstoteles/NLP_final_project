@@ -18,7 +18,7 @@ pathlib2==2.3.3
 pickleshare==0.7.5
 requests==2.21.0
 requests-oauthlib==1.2.0
-tensorflow==1.15
+tensorflow==2.0.0b1
 urllib3==1.24.1
 wget==3.2
 Werkzeug==0.15.6

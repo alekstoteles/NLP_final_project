@@ -26,6 +26,7 @@ from numpy import zeros
 import pandas as pd
 import tensorflow as tf
 import h5py
+import tensorflow.compat.v1
 from keras import initializers
 from keras import backend as K
 from keras.models import Sequential
