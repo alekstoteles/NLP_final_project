@@ -1,2 +1,2 @@
-web: gunicorn run_keras_server:app
 heroku ps:scale web=1
+web: gunicorn run_keras_server:app
