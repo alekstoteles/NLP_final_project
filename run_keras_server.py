@@ -59,6 +59,7 @@ def load_tokenizer():
     # load tokenizer
     with open(path + 'tokenizer.pickle', 'rb') as handle:
         tokenizer = pickle.load(handle)
+    print("Tokenizer loaded.")
 
 def load_embedding_matrix():
     path = 'data/'
@@ -136,11 +137,14 @@ def load_crc_model():
 
 def generate_inference(model, abstract):
     """Generate output with CRC labels for abstract"""
-
+    global tokenizer
+    global CRC_list
+    
     abstractx = tokenizer.texts_to_sequences([abstract])
     abstractx = pad_sequences(abstractx, padding='post', maxlen=200)
     y_pred = model.predict(abstractx)
     y_pred_labels = list(np.array(CRC_list).reshape(-1,)[convert_to_0_1_1D(y_pred).astype(bool).reshape(-1,)])
+    print(f"{y_pred_labels}")
 
     # Formatting in html
     html = ''
@@ -227,8 +231,7 @@ def predict():
 if __name__ == "__main__":
     print(("* Loading Keras model and Flask starting server..."
            "please wait until server has fully started"))
-    load_crc_model()
-    load_tokenizer()
-    # load_embedding_matrix()
     load_crc_list()
+    load_tokenizer()
+    load_crc_model()
     app.run(debug=False, threaded=False)
