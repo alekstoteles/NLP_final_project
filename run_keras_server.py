@@ -127,9 +127,9 @@ def load_crc_model():
 
     # if first time, download model
     try:
-        filepath = Path(path + 'model.h5').resolve(strict=True)
+        filepath = Path(path + 'model2.h5').resolve(strict=True)
     except FileNotFoundError:
-        filename = wget.download(remote_path + 'model.h5', out=path)
+        filename = wget.download(remote_path + 'model2.h5', out=path)
         print("\nModel dowloaded.")
 
     # load model
@@ -240,9 +240,8 @@ def predict():
 
 # if this is the main thread of execution first load the model and then start the server
 if __name__ == "__main__":
-    # print(("* Loading Keras model and Flask starting server..."
-    #        "please wait until server has fully started"))
     # load_crc_list()
     # load_tokenizer()
     # load_crc_model()
+    print("Starting up app.")
     app.run(debug=False, threaded=False)
