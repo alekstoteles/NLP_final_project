@@ -43,10 +43,7 @@ requests-oauthlib==1.2.0
 seaborn==0.9.0
 tensorboard==2.0.2
 tensorboardX==1.2
-tensorflow==2.0.0
-tensorflow-estimator==2.0.1
-tensorflow-estimator-2.0-preview==1.14.0.dev2019071400
-tf-nightly-2.0-preview==2.0.0.dev20190714
+tensorflow==2.0.0b1
 urllib3==1.24.1
 wget==3.2
 Werkzeug==0.15.6
