@@ -127,13 +127,13 @@ def load_crc_model():
 
     # if first time, download model
     try:
-        filepath = Path(path + 'model2.h5').resolve(strict=True)
+        filepath = Path(path + 'model.h5').resolve(strict=True)
     except FileNotFoundError:
-        filename = wget.download(remote_path + 'model2.h5', out=path)
+        filename = wget.download(remote_path + 'model.h5', out=path)
         print("\nModel dowloaded.")
 
     # load model
-    model = load_model(path + 'model2.h5', custom_objects={'weighted_bce': weighted_bce, 'f1': f1})
+    model = load_model(path + 'model.h5', custom_objects={'weighted_bce': weighted_bce, 'f1': f1})
     print("Model loaded.")
 
 def generate_inference(model, abstract):
