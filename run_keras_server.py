@@ -32,9 +32,11 @@ from keras import backend as K
 from keras.models import Sequential
 from keras.models import Model
 from keras.utils import CustomObjectScope
+
 # from keras.models import load_model
 # from tensorflow.keras.models import load_model
 from tensorflow.python.keras.models import load_model
+from tensorflow.python.keras.backend import set_session
 from keras.layers import Flatten
 from keras.layers import GlobalMaxPooling1D
 from keras.layers import Input, InputLayer
@@ -51,6 +53,9 @@ model = None
 tokenizer = None
 embedding_matrix = None
 CRC_list = []
+
+sess = tf.compat.v1.Session()
+graph = tf.compat.v1.get_default_graph()
 
 def load_tokenizer():
     path = 'data/'
@@ -99,6 +104,9 @@ def load_crc_list():
 
 def load_crc_model():
     global model
+    global graph
+    global sess
+    
     path = './data/'
     remote_path = 'https://kstonedev.s3-us-west-2.amazonaws.com/W266/'
 
@@ -133,6 +141,7 @@ def load_crc_model():
         print("\nModel dowloaded.")
 
     # load model
+    set_session(sess)
     model = load_model(path + 'model.h5', custom_objects={'weighted_bce': weighted_bce, 'f1': f1})
     print("Model loaded.")
 
@@ -140,9 +149,14 @@ def generate_inference(model, abstract):
     """Generate output with CRC labels for abstract"""
     global tokenizer
     global CRC_list
+    global graph
+    global sess
     
     abstractx = tokenizer.texts_to_sequences([abstract])
     abstractx = pad_sequences(abstractx, padding='post', maxlen=200)
+#    with graph.as_default():
+#        set_session(sess)
+#        y_pred = model.predict(abstractx)
     y_pred = model.predict(abstractx)
     y_pred_labels = list(np.array(CRC_list).reshape(-1,)[convert_to_0_1_1D(y_pred).astype(bool).reshape(-1,)])
     print(f"{y_pred_labels}")
@@ -206,6 +220,7 @@ def _declareStuff():
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
+    global model
     """Home page of app with form"""
     # Create form
     form = ReusableForm(request.form)
@@ -223,12 +238,18 @@ def home():
 def predict():
     # initialize the data dictionary that will be returned from the view
     data = {"success": False}
+    global graph
+    global sess
+    global model
 
     if flask.request.method == "POST":
         sample = [flask.request.data.decode("utf-8")]
 
         sample = tokenizer.texts_to_sequences(sample)
         sample = pad_sequences(sample, padding='post', maxlen=200)
+#        with graph.as_default():
+#            set_session(sess)
+#            y_pred = model.predict(sample)
         y_pred = model.predict(sample)
         y_pred_labels = list(np.array(CRC_list).reshape(-1,)[convert_to_0_1_1D(y_pred).astype(bool).reshape(-1,)])
         data["success"] = True
