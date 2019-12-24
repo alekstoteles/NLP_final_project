@@ -52,7 +52,7 @@ app = flask.Flask(__name__)
 model = None
 tokenizer = None
 embedding_matrix = None
-CRC_list = []
+CPC_list = []
 
 sess = tf.compat.v1.Session()
 graph = tf.compat.v1.get_default_graph()
@@ -63,7 +63,7 @@ def load_tokenizer():
     global tokenizer
     
     # load tokenizer
-    with open(path + 'tokenizer.pickle', 'rb') as handle:
+    with open(path + 'tokenizer_allfiles.pickle', 'rb') as handle:
         tokenizer = pickle.load(handle)
     print("Tokenizer loaded.")
 
@@ -95,20 +95,19 @@ def convert_to_0_1_1D(a):
     """Return row - for each val in row: 1 if val > 0.5, else 0"""
     return np.round(a).astype(int)
 
-def load_crc_list():
-    # load list of CRC labels that aligns to one-hot encoding
-    global CRC_list
+def load_cpc_list():
+    # load list of CPC labels that aligns to one-hot encoding
+    global CPC_list
     path = 'data/'
-    CRC_list = pd.read_csv(path + 'crc_labels.csv', header=None)
-    print("CRC list loaded.")
+    CPC_list = pd.read_csv(path + 'cpc_labels_allfiles.csv', header=None)
+    print("CPC list loaded.")
 
-def load_crc_model():
+def load_cpc_model():
     global model
     global graph
     global sess
     
     path = './data/'
-    remote_path = 'https://kstonedev.s3-us-west-2.amazonaws.com/W266/'
 
     # Define custom functions used in model training
     def recall_m(y_true, y_pred):
@@ -132,23 +131,15 @@ def load_crc_model():
         weighted_bce = K.mean(bce * weights)
         return weighted_bce
 
-
-    # if first time, download model
-    try:
-        filepath = Path(path + 'model.h5').resolve(strict=True)
-    except FileNotFoundError:
-        filename = wget.download(remote_path + 'model.h5', out=path)
-        print("\nModel dowloaded.")
-
     # load model
     set_session(sess)
-    model = load_model(path + 'model.h5', custom_objects={'weighted_bce': weighted_bce, 'f1': f1})
+    model = load_model(path + 'model_allfiles.h5', custom_objects={'weighted_bce': weighted_bce, 'f1': f1})
     print("Model loaded.")
 
 def generate_inference(model, abstract):
-    """Generate output with CRC labels for abstract"""
+    """Generate output with CPC labels for abstract"""
     global tokenizer
-    global CRC_list
+    global CPC_list
     global graph
     global sess
     
@@ -158,7 +149,7 @@ def generate_inference(model, abstract):
 #        set_session(sess)
 #        y_pred = model.predict(abstractx)
     y_pred = model.predict(abstractx)
-    y_pred_labels = list(np.array(CRC_list).reshape(-1,)[convert_to_0_1_1D(y_pred).astype(bool).reshape(-1,)])
+    y_pred_labels = list(np.array(CPC_list).reshape(-1,)[convert_to_0_1_1D(y_pred).astype(bool).reshape(-1,)])
     print(f"{y_pred_labels}")
 
     # Formatting in html
@@ -213,10 +204,31 @@ class ReusableForm(Form):
 def _declareStuff():
     print(("* Loading Keras model and Flask starting server..."
            "please wait until server has fully started"))
-    load_crc_list()
+    load_cpc_list()
     load_tokenizer()
-    load_crc_model()
-    # app.run(debug=False, threaded=False)
+    load_cpc_model()
+
+    path = 'data/'
+    remote_path = 'https://kstonedev.s3-us-west-2.amazonaws.com/W266/'
+    
+    # if first time, download model, tokenizer, cpc_labels
+    try:
+        filepath = Path(path + 'model_allfiles.h5').resolve(strict=True)
+    except FileNotFoundError:
+        filename = wget.download(remote_path + 'model_allfiles.h5', out=path)
+        print("\nModel dowloaded.")
+
+    try:
+        filepath = Path(path + 'tokenizer_allfiles.pickle').resolve(strict=True)
+    except FileNotFoundError:
+        filename = wget.download(remote_path + 'tokenizer_allfiles.pickle', out=path)
+        print("\nTokenizer dowloaded.")
+
+    try:
+        filepath = Path(path + 'cpc_labels_allfiles.csv').resolve(strict=True)
+    except FileNotFoundError:
+        filename = wget.download(remote_path + 'cpc_labels_allfiles.csv', out=path)
+        print("\nCPC labels dowloaded.")
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
@@ -251,7 +263,7 @@ def predict():
 #            set_session(sess)
 #            y_pred = model.predict(sample)
         y_pred = model.predict(sample)
-        y_pred_labels = list(np.array(CRC_list).reshape(-1,)[convert_to_0_1_1D(y_pred).astype(bool).reshape(-1,)])
+        y_pred_labels = list(np.array(CPC_list).reshape(-1,)[convert_to_0_1_1D(y_pred).astype(bool).reshape(-1,)])
         data["success"] = True
         data["labels"] = y_pred_labels
 
@@ -261,8 +273,8 @@ def predict():
 
 # if this is the main thread of execution first load the model and then start the server
 if __name__ == "__main__":
-    # load_crc_list()
+    # load_cpc_list()
     # load_tokenizer()
-    # load_crc_model()
+    # load_cpc_model()
     print("Starting up app.")
     app.run(debug=False, threaded=False)

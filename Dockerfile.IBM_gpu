@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
     wget \
     git \
     vim \
-    grep \
+    grep
 
 # necessary to make add_user.sh work
 RUN apt-get install -y --fix-missing sudo
@@ -31,7 +31,7 @@ RUN pip --no-cache-dir install --upgrade pip
 RUN pip --no-cache-dir install --upgrade setuptools
 # RUN pip --no-cache-dir install opencv-python scikit-image
 
-RUN pip --no-cache-dir install keras gunicorn jinja2 ninja numpy pandas requests urllib3 wget wtforms flask numpy scikit-learn nltk wget jupyter
+RUN pip --no-cache-dir install keras gunicorn jinja2 ninja numpy pandas requests urllib3 wget wtforms flask numpy scikit-learn nltk wget pickle jupyter
 
 WORKDIR notebooks
 # RUN wget https://s3-eu-west-1.amazonaws.com/darraghdog1/train.csv.zip
@@ -44,7 +44,7 @@ RUN mv glove.6B.100d.txt NLP_final_project/data
 RUN wget https://kstonedev.s3-us-west-2.amazonaws.com/W266/USPTO-2M/USPTO-2M.zip
 RUN unzip USPTO-2M.zip
 RUN \rm USPTO-2M.zip
-RUN mv USPTO-2M.zip NLP_final_project/data
+RUN mv USPTO-2M NLP_final_project/data
 RUN mv NLP_final_project/data NLP_final_project/notebooks/data
 EXPOSE 8888
 
