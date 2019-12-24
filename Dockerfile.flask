@@ -29,14 +29,13 @@ RUN apt-get update && apt-get install -y \
 RUN python3 -m pip install --upgrade pip
 
 RUN pip install --upgrade setuptools
-RUN pip install keras gunicorn jinja2 ninja numpy pandas requests urllib3 wget wtforms flask pickle
+RUN pip install keras gunicorn jinja2 ninja numpy pandas requests urllib3 wget wtforms flask 
 # RUN pip install https://files.pythonhosted.org/packages/3f/98/5a99af92fb911d7a88a0005ad55005f35b4c1ba8d75fba02df726cd936e6/tensorflow-1.15.0-cp36-cp36m-manylinux2010_x86_64.whl
 RUN pip install tensorflow
 
 WORKDIR /code
 RUN git clone https://github.com/alekstoteles/NLP_final_project.git
-WORKDIR /code/NLP_final_project/notebooks
-RUN mkdir /code/NLP_final_project/notebooks/data
+WORKDIR /code/NLP_final_project
 
 ENV FLASK_APP run_keras_server.py
 ENV FLASK_RUN_HOST 0.0.0.0
