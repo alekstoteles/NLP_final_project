@@ -36,6 +36,7 @@ from keras.utils import CustomObjectScope
 # from keras.models import load_model
 # from tensorflow.keras.models import load_model
 from tensorflow.python.keras.models import load_model
+# from keras.models import load_model
 from tensorflow.python.keras.backend import set_session
 from keras.layers import Flatten
 from keras.layers import GlobalMaxPooling1D
@@ -107,7 +108,7 @@ def load_cpc_model():
     global graph
     global sess
     
-    path = './data/'
+    path = 'data/'
 
     # Define custom functions used in model training
     def recall_m(y_true, y_pred):
@@ -133,6 +134,7 @@ def load_cpc_model():
 
     # load model
     set_session(sess)
+    print("Loading model...")
     model = load_model(path + 'model_allfiles.h5', custom_objects={'weighted_bce': weighted_bce, 'f1': f1})
     print("Model loaded.")
 
@@ -204,10 +206,6 @@ class ReusableForm(Form):
 def _declareStuff():
     print(("* Loading Keras model and Flask starting server..."
            "please wait until server has fully started"))
-    load_cpc_list()
-    load_tokenizer()
-    load_cpc_model()
-
     path = 'data/'
     remote_path = 'https://kstonedev.s3-us-west-2.amazonaws.com/W266/'
     
@@ -229,6 +227,10 @@ def _declareStuff():
     except FileNotFoundError:
         filename = wget.download(remote_path + 'cpc_labels_allfiles.csv', out=path)
         print("\nCPC labels dowloaded.")
+
+    load_cpc_list()
+    load_tokenizer()
+    load_cpc_model()
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
