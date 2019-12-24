@@ -29,7 +29,7 @@ RUN apt-get update && apt-get install -y \
 RUN python3 -m pip install --upgrade pip
 
 RUN pip install --upgrade setuptools
-RUN pip install keras gunicorn jinja2 ninja numpy pandas requests urllib3 wget wtforms flask numpy
+RUN pip install keras gunicorn jinja2 ninja numpy pandas requests urllib3 wget wtforms flask numpy pickle
 # RUN pip install https://files.pythonhosted.org/packages/3f/98/5a99af92fb911d7a88a0005ad55005f35b4c1ba8d75fba02df726cd936e6/tensorflow-1.15.0-cp36-cp36m-manylinux2010_x86_64.whl
 RUN pip install tensorflow
 
